@@ -230,6 +230,7 @@ int read_sort_file(char *filename, int source, char *source_path[])
 
 	while(fgets(line = line_buffer, MAX_LINE + 1, fd) != NULL) {
 		int len = strlen(line);
+		int i;
 
 		if(len == MAX_LINE && line[len - 1] != '\n') {
 			/* line too large */
@@ -253,34 +254,28 @@ int read_sort_file(char *filename, int source, char *source_path[])
 		/* if comment line, skip */
 		if(*line == '#')
 			continue;
-
-		/*
-		 * Scan for filename, don't use sscanf() and "%s" because
-		 * that can't handle filenames with spaces
-		 */
-		for(name = sort_filename; !isspace(*line) && *line != '\0';) {
-			if(*line == '\\') {
-				line ++;
-				if (*line == '\0')
-					break;
+		
+		name = sort_filename;
+		for(i = len - 1; i != 0; i--){
+			if(line[i] == ' '){
+				break;
 			}
-			*name ++ = *line ++;
 		}
-		*name = '\0';
-
+		
 		/*
 		 * if filename empty, then line was empty of anything but
 		 * whitespace or a backslash character.  Skip empy lines
 		 */
-		if(sort_filename[0] == '\0')
+		if(i == 0){
 			continue;
-
+		}
+		
 		/*
 		 * Scan the rest of the line, we expect a decimal number
 		 * which is the filename priority
 		 */
 		errno = 0;
-		res = sscanf(line, "%d%n", &priority, &n);
+		res = sscanf(line + i + 1, "%d%n", &priority, &n);
 
 		if((res < 1 || errno) && errno != ERANGE) {
 			if(errno == 0)
@@ -301,6 +296,11 @@ int read_sort_file(char *filename, int source, char *source_path[])
 				line_buffer);
 			goto failed;
 		}
+		
+		/* Copy name */
+		memcpy(name, line, i);
+		name[i] = '\0';
+
 
 		/* Skip any trailing whitespace */
 		line += n;
