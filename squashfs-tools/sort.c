@@ -219,7 +219,7 @@ int read_sort_file(char *filename, int source, char *source_path[])
 	FILE *fd;
 	char line_buffer[MAX_LINE + 1]; /* overflow safe */
 	char sort_filename[MAX_LINE + 1]; /* overflow safe */
-	char *line, *name;
+	char *line;
 	int n, priority, res;
 
 	if((fd = fopen(filename, "r")) == NULL) {
@@ -255,7 +255,6 @@ int read_sort_file(char *filename, int source, char *source_path[])
 		if(*line == '#')
 			continue;
 		
-		name = sort_filename;
 		for(i = len - 1; i != 0; i--){
 			if(line[i] == ' '){
 				break;
@@ -298,8 +297,8 @@ int read_sort_file(char *filename, int source, char *source_path[])
 		}
 		
 		/* Copy name */
-		memcpy(name, line, i);
-		name[i] = '\0';
+		memcpy(sort_filename, line, i);
+		sort_filename[i] = '\0';
 
 
 		/* Skip any trailing whitespace */
