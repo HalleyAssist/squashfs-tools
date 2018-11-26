@@ -269,6 +269,10 @@ int read_sort_file(char *filename, int source, char *source_path[])
 			continue;
 		}
 		
+		/* Copy name */
+		memcpy(sort_filename, line, i);
+		sort_filename[i] = '\0';
+		
 		/*
 		 * Scan the rest of the line, we expect a decimal number
 		 * which is the filename priority
@@ -296,10 +300,6 @@ int read_sort_file(char *filename, int source, char *source_path[])
 				line_buffer);
 			goto failed;
 		}
-		
-		/* Copy name */
-		memcpy(sort_filename, line, i);
-		sort_filename[i] = '\0';
 
 
 		/* Skip any trailing whitespace */
