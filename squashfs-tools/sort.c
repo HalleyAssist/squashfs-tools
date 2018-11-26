@@ -274,7 +274,8 @@ int read_sort_file(char *filename, int source, char *source_path[])
 		 * which is the filename priority
 		 */
 		errno = 0;
-		res = sscanf(line + i + 1, "%d%n", &priority, &n);
+		line += (i + 1);
+		res = sscanf(line, "%d%n", &priority, &n);
 
 		if((res < 1 || errno) && errno != ERANGE) {
 			if(errno == 0)
