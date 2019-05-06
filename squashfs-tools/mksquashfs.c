@@ -61,6 +61,10 @@
 #include <sys/sysinfo.h>
 #endif
 
+#ifdef linux
+#include <sys/sysmacros.h>
+#endif
+
 #include "squashfs_fs.h"
 #include "squashfs_swap.h"
 #include "mksquashfs.h"
